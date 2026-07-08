@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#3F5A52">
+  <title>Budget App</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    :root {
+      --user-color: #3f5a52;
+      --user-text-color: #ffffff;
+    }
+  </style>
+</head>
+
+<body class="min-h-screen bg-[#FFF8F3] font-sans text-[#3F5A52]">
+  <main class="mx-auto max-w-3xl p-4 sm:p-6">
+
+    <!-- Header -->
+    <header class="mb-6 rounded-3xl bg-[#FE8254] p-6 text-[#E9E1CA] shadow-sm">
+      <h1 class="text-3xl font-bold">Budget App</h1>
+      <p class="mt-1 text-sm opacity-90">Plan your money your way.</p>
+    </header>
+
+    <!-- Budget type -->
+    <section class="mb-5 rounded-3xl bg-white p-5 shadow-sm">
+      <div class="mb-4">
+        <h2 class="text-lg font-bold">How do you want to budget?</h2>
+        <p class="text-sm text-gray-500">Choose the budget style that fits you.</p>
+      </div>
+
+      <!-- Hidden select: your existing JavaScript still uses this -->
+      <select id="budgetType" class="hidden">
+        <option value="monthly">Monthly</option>
+        <option value="cutoff">Cutoff / Payday</option>
+        <option value="custom">Custom Period</option>
+      </select>
+
+      <div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
+        <button
+          type="button"
+          data-budget-type="monthly"
+          class="budgetTypeBtn rounded-2xl border-2 border-[#3F5A52] bg-[#E9E1CA] p-4 text-left transition"
+        >
+          <span class="text-2xl">📅</span>
+          <p class="mt-2 font-bold">Monthly</p>
+          <p class="text-xs text-gray-600">For the whole month</p>
+        </button>
+
+        <button
+          type="button"
+          data-budget-type="cutoff"
+          class="budgetTypeBtn rounded-2xl border-2 border-transparent bg-[#FFF8F3] p-4 text-left transition hover:border-[#FE8254]"
+        >
+          <span class="text-2xl">💸</span>
+          <p class="mt-2 font-bold">Cutoff</p>
+          <p class="text-xs text-gray-600">For every payday</p>
+        </button>
+
+        <button
+          type="button"
+          data-budget-type="custom"
+          class="budgetTypeBtn rounded-2xl border-2 border-transparent bg-[#FFF8F3] p-4 text-left transition hover:border-[#FE8254]"
+        >
+          <span class="text-2xl">✨</span>
+          <p class="mt-2 font-bold">Custom</p>
+          <p class="text-xs text-gray-600">For any date range</p>
+        </button>
+      </div>
+    </section>
+
+    <!-- Currency -->
+    <section class="mb-5 rounded-3xl bg-white p-5 shadow-sm">
+        <label for="currency" class="mb-2 block text-sm font-semibold">
+            Currency
+        </label>
+
+        <div class="relative">
+            <select
+            id="currency"
+            class="w-full appearance-none rounded-2xl bg-[#3F5A52] p-3 pr-10 text-[#E9E1CA] outline-none"
+            >
+            <option value="PHP">₱ Philippine Peso</option>
+            <option value="USD">$ US Dollar</option>
+            </select>
+
+            <span class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[#E9E1CA]">
+            ▼
+            </span>
+        </div>
+
+        <div class="mt-4 flex items-center justify-between rounded-2xl bg-[#FFF8F3] p-3">
+            <div>
+            <p class="text-sm font-semibold">Theme color</p>
+            <p class="text-xs text-gray-500">Choose your budget table color</p>
+            </div>
+
+            <input
+            id="colorPicker"
+            type="color"
+            value="#3F5A52"
+            class="h-10 w-12 cursor-pointer rounded-xl border-2 border-white bg-transparent p-1 shadow-sm"
+            aria-label="Choose theme color"
+            />
+        </div>
+    </section>
+
+    <!-- Budget setup -->
+    <section id="setupSection" class="mb-5 rounded-3xl bg-white p-5 shadow-sm">
+      <div class="mb-5">
+        <h2 class="text-xl font-bold">Create your budget</h2>
+        <p class="text-sm text-gray-500">Start with your income and budget period.</p>
+      </div>
+
+      <form id="budgetForm" class="flex flex-col gap-4">
+        <div>
+          <label for="title" class="mb-2 block text-sm font-semibold">Budget title</label>
+          <input
+            id="title"
+            type="text"
+            placeholder="Example: July Budget"
+            required
+            class="w-full rounded-2xl border border-gray-200 bg-[#FFF8F3] p-3 outline-none transition focus:border-[#FE8254] focus:ring-2 focus:ring-[#FE8254]/20"
+          />
+        </div>
+
+        <!-- Monthly -->
+        <div id="monthlyFields">
+          <label for="monthPicker" class="mb-2 block text-sm font-semibold">Choose month</label>
+          <input
+            id="monthPicker"
+            type="month"
+            class="w-full rounded-2xl border border-gray-200 bg-[#FFF8F3] p-3 outline-none transition focus:border-[#FE8254] focus:ring-2 focus:ring-[#FE8254]/20"
+          />
+        </div>
+
+        <!-- Cutoff / custom -->
+        <div id="dateRangeFields" class="hidden grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <div>
+            <label for="startDate" class="mb-2 block text-sm font-semibold">Start date</label>
+            <input
+              id="startDate"
+              type="date"
+              class="w-full rounded-2xl border border-gray-200 bg-[#FFF8F3] p-3 outline-none transition focus:border-[#FE8254] focus:ring-2 focus:ring-[#FE8254]/20"
+            />
+          </div>
+
+          <div>
+            <label for="endDate" class="mb-2 block text-sm font-semibold">End date</label>
+            <input
+              id="endDate"
+              type="date"
+              class="w-full rounded-2xl border border-gray-200 bg-[#FFF8F3] p-3 outline-none transition focus:border-[#FE8254] focus:ring-2 focus:ring-[#FE8254]/20"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label for="salary" class="mb-2 block text-sm font-semibold">Income</label>
+          <input
+            id="salary"
+            type="number"
+            min="0"
+            placeholder="Monthly Income"
+            required
+            class="w-full rounded-2xl border border-gray-200 bg-[#FFF8F3] p-3 outline-none transition focus:border-[#FE8254] focus:ring-2 focus:ring-[#FE8254]/20"
+          />
+        </div>
+
+        <button
+          type="submit"
+          class="mt-1 w-full rounded-2xl bg-[#3F5A52] p-3 font-semibold text-[#E9E1CA] transition hover:bg-[#2E4039]"
+        >
+          Create Budget ✨
+        </button>
+      </form>
+    </section>
+
+    <!-- Budget dashboard -->
+    <section id="budgetSection" class="hidden rounded-3xl bg-white p-5 shadow-sm">
+      <div class="mb-5 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div class="min-w-0">
+          <p class="mb-1 text-sm text-gray-500">Currently viewing</p>
+
+          <select
+            id="budgetSelector"
+            class="w-full max-w-xs rounded-xl border border-gray-200 bg-[#FFF8F3] p-2 text-sm font-semibold text-[#3F5A52] outline-none focus:border-[#FE8254]"
+          ></select>
+
+          <h2 id="budgetTitle" class="mt-3 text-2xl font-bold">Budget Title</h2>
+          <span id="displayDate" class="text-sm text-gray-500">Date</span>
+        </div>
+
+        <div class="flex gap-2">
+          <button
+            id="newBudgetBtn"
+            type="button"
+            class="flex-1 rounded-xl bg-[#3F5A52] px-3 py-2 text-sm font-semibold text-white hover:bg-[#2E4039]"
+          >
+            + New
+          </button>
+
+          <button
+            id="deleteBudgetBtn"
+            type="button"
+            class="flex-1 rounded-xl bg-red-500 px-3 py-2 text-sm font-semibold text-white hover:bg-red-600"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+
+      <!-- Summary -->
+      <div class="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-3">
+        <div class="rounded-2xl bg-[#E9E1CA] p-4">
+          <p class="text-sm text-gray-600">Income</p>
+          <p id="incomeDisplay" class="mt-1 text-2xl font-bold">₱0</p>
+        </div>
+
+        <div class="rounded-2xl bg-[#FFF1E8] p-4">
+          <p class="text-sm text-gray-600">Planned</p>
+          <p id="plannedDisplay" class="mt-1 text-2xl font-bold">₱0</p>
+        </div>
+
+        <div class="rounded-2xl bg-[#EAF4EE] p-4">
+          <p class="text-sm text-gray-600">Remaining</p>
+          <p id="balanceDisplay" class="mt-1 text-2xl font-bold">₱0</p>
+        </div>
+      </div>
+
+      <!-- Add category -->
+      <form id="categoryForm" class="mb-6 rounded-2xl bg-[#FFF8F3] p-4">
+        <h3 class="mb-1 text-lg font-bold">Add a category</h3>
+        <p class="mb-4 text-sm text-gray-500">Choose an icon, then add an amount.</p>
+
+        <div id="emojiChoices" class="mb-4 flex flex-wrap gap-2">
+          <button type="button" class="emojiBtn rounded-xl bg-white p-2 text-xl shadow-sm" data-emoji="🍔">🍔</button>
+          <button type="button" class="emojiBtn rounded-xl bg-white p-2 text-xl shadow-sm" data-emoji="🚌">🚌</button>
+          <button type="button" class="emojiBtn rounded-xl bg-white p-2 text-xl shadow-sm" data-emoji="🏠">🏠</button>
+          <button type="button" class="emojiBtn rounded-xl bg-white p-2 text-xl shadow-sm" data-emoji="📱">📱</button>
+          <button type="button" class="emojiBtn rounded-xl bg-white p-2 text-xl shadow-sm" data-emoji="🛍️">🛍️</button>
+          <button type="button" class="emojiBtn rounded-xl bg-white p-2 text-xl shadow-sm" data-emoji="💊">💊</button>
+          <button type="button" class="emojiBtn rounded-xl bg-white p-2 text-xl shadow-sm" data-emoji="✨">✨</button>
+        </div>
+
+        <input id="selectedEmoji" type="hidden" value="✨" />
+
+        <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <input
+            id="category"
+            type="text"
+            placeholder="Example: Food"
+            required
+            class="w-full rounded-xl border border-gray-200 bg-white p-3 outline-none focus:border-[#FE8254]"
+          />
+
+          <input
+            id="amount"
+            type="number"
+            min="0"
+            placeholder="Planned amount"
+            required
+            class="w-full rounded-xl border border-gray-200 bg-white p-3 outline-none focus:border-[#FE8254]"
+          />
+        </div>
+
+        <button
+          type="submit"
+          class="mt-3 w-full rounded-xl bg-[#FE8254] p-3 font-semibold text-white hover:opacity-90"
+        >
+          + Add Category
+        </button>
+      </form>
+
+      <!-- Entries -->
+      <div class="overflow-x-auto rounded-2xl border border-gray-100">
+        <table id="budgetEntries" class="w-full border-collapse text-sm">
+          <thead>
+            <tr class="bg-[var(--user-color)] text-[var(--user-text-color)]">
+              <th class="p-3 text-left">Category</th>
+              <th class="p-3 text-right">Amount</th>
+              <th class="p-3 text-right">Balance</th>
+              <th class="p-3 text-center">Action</th>
+            </tr>
+          </thead>
+          <tbody id="budgetBody"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
