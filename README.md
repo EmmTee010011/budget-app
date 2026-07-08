@@ -24,4 +24,4 @@ This project is still being developed and is made for learning and personal use.
 
 ## Copyright
 
-© 2026 EmmTee010011. All rights reserved.
+© 2026 Emm Tee. All rights reserved.
