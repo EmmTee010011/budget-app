@@ -115,7 +115,8 @@ function renderBudget() {
         const row = document.createElement("tr");
 
         row.innerHTML = `
-      <td class="border p-2">${item.emoji} ${item.name}</td>
+      <td class="border p-2 text-center"><input type="checkbox"${item.done ? "checked" : ""} onchange="toggleDone(${index})"></td>
+      <td class="border p-2"><span class="${item.done ? 'line-through opacity-60' : ''}">${item.emoji} ${item.name}</span></td>
       <td class="border p-2 text-right">${formatMoney(item.amount)}</td>
       <td class="border p-2 text-right">${formatMoney(remaining)}</td>
       <td class="border p-2 text-center">
@@ -123,7 +124,7 @@ function renderBudget() {
           onclick="deleteCategory(${index})"
           class="text-red-500 hover:underline"
         >
-          Delete
+          <i class="fa-solid fa-trash"></i>
         </button>
       </td>
     `;
@@ -133,6 +134,15 @@ function renderBudget() {
 
     renderBudgetSelector();
     saveBudgets();
+}
+
+function toggleDone(index) {
+    const budget = getActiveBudget();
+
+    budget.categories[index].done =
+        !budget.categories[index].done;
+
+    renderBudget();
 }
 
 budgetForm.addEventListener("submit", (event) => {
