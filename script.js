@@ -2275,31 +2275,6 @@ window.addEventListener(
 
     }
 );
-
-
-// ============================================
-// SERVICE WORKER
-// ============================================
-//
-// Service workers only work on http/https.
-// They do NOT work when opening index.html
-// directly with file://
-//
-
-if (
-    "serviceWorker" in navigator &&
-    window.location.protocol !== "file:"
-) {
-
-    navigator.serviceWorker
-        .register("./service-worker.js")
-        .catch((error) => {
-
-            console.warn(
-                "Service worker could not be registered:",
-                error
-            );
-
-        });
-
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("./service-worker.js");
 }
