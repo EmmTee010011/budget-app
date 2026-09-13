@@ -531,7 +531,7 @@ function renderBudget() {
                     <div class="min-w-0 flex-1">
 
                         <p
-                            class="category-name truncate font-bold"
+                            class="category-name break-words font-bold leading-tight"
                         >
                             ${escapeHtml(item.name)}
                         </p>
