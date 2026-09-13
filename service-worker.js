@@ -3,7 +3,7 @@ const CACHE_NAME = "budget-app-v1";
 const filesToCache = [
   "./",
   "./index.html",
-  "./script2.js",
+  "./script.js",
   "./manifest.json"
 ];
 
